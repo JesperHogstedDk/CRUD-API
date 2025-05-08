@@ -1,0 +1,19 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "Simple CRUD API using in-memory database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "JesperHogstedDk",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JesperHogstedDk/crud-api.git"
+  },  "bugs": {
+    "url": "https://github.com/JesperHogstedDk/crud-api/issues"
+  },
+  "homepage": "https://github.com/JesperHogstedDk/crud-api#readme"
+}

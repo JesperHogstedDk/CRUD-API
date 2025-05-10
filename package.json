@@ -3,16 +3,25 @@
   "version": "1.0.0",
   "description": "Simple CRUD API using in-memory database",
   "main": "index.js",
+  "type": "module",
+    "engines": {
+    "node": ">=22.14.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node --env-file=.env --experimental-strip-types src/index.ts",
+    "dev": "node --env-file=.env --experimental-strip-types --watch src/index.ts"
   },
   "author": "JesperHogstedDk",
   "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JesperHogstedDk/crud-api.git"
-  },  "bugs": {
+  },
+  "bugs": {
     "url": "https://github.com/JesperHogstedDk/crud-api/issues"
   },
   "homepage": "https://github.com/JesperHogstedDk/crud-api#readme"

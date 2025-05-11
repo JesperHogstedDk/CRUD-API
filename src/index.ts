@@ -1,36 +1,22 @@
-// (async () => {
-//   console.log('index.ts: esm-pure-experimental-strip-types')
-//   const text:string = 'Hello, world!'
-//   console.log(text)
-// })();
-import http from 'node:http';
+import { createServer } from 'node:http';
+import { handleUserRequest } from './routes/users.ts';
 
 const PORT = process.env.PORT || 3000;
 
-const server = http.createServer((req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (req.method === "GET" && req.url === "/api/users") {   
+const server = createServer(async (req, res) => {
+  if (req.url?.startsWith("/api/users")) {
+    return handleUserRequest(req, res);
+  } else if (req.url === "/") {
     res.writeHead(200);
-    const users = [
-      { id: 11, name: 'Jesper' },
-      { id: 21, name: 'Karen' },
-    ];
-    return res.end(JSON.stringify(users));
+    res.end('This is a node CRUD API server with watch done with Typescript!');  
+    return;
   }
-  res.end(JSON.stringify({
-    data: 'This is node CRUD API with watch and Typescript!',
-  }));
+
+  res.writeHead(404);
+  res.end(JSON.stringify({ error: "Not Found" }));
 });
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
   console.log('index.ts: esm-pure-experimental-strip-types');
 });
-
-// (async () => {
-//   console.log('index.ts: esm-pure-experimental-strip-types')
-//   const text:string = 'Hello, world!'
-//   console.log(text)
-
-// })();
-

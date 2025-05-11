@@ -10,7 +10,10 @@ export interface User {
 const database: User[] = [];
 
 export const db = {
-    getAll: async (): Promise<User[]> => database,
+    getAll: async (): Promise<User[]> => {
+        // throw new Error("Database connection failed! TESTING ERROR HANDLING");
+        return database;
+    },
     getById: async (id: string): Promise<User | undefined> => {
         return database.find(user => user.id === id)
     },

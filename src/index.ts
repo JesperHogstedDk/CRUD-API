@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 const server = createServer(async (req, res) => {
   console.log("Request received:", req.method, req.url);
   if (req.url?.startsWith("/api/users")) {
-    return handleUserRequest(req, res);
+    return await handleUserRequest(req, res);
   } else if (req.url === "/") {
     res.writeHead(200);
     res.end('This is a node CRUD API server with watch done with Typescript!');  

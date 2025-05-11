@@ -24,5 +24,8 @@
   "homepage": "https://github.com/JesperHogstedDk/crud-api#readme",
   "devDependencies": {
     "@types/node": "^22.15.17"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
   }
 }

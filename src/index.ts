@@ -4,6 +4,7 @@ import { handleUserRequest } from './routes/users.ts';
 const PORT = process.env.PORT || 3000;
 
 const server = createServer(async (req, res) => {
+  console.log("Request received:", req.method, req.url);
   if (req.url?.startsWith("/api/users")) {
     return handleUserRequest(req, res);
   } else if (req.url === "/") {

@@ -2,9 +2,9 @@ import { v4 as uuidv4 } from "uuid";
 
 export interface User {
     id: string;
-    name: string;
+    username: string;
     age: number;
-    email: string;
+    hobbies: string[];
 }
 
 const database: User[] = [];
@@ -14,17 +14,17 @@ export const db = {
     getById: async (id: string): Promise<User | undefined> => {
         return database.find(user => user.id === id)
     },
-    create: async (name: string, age: number, email: string): Promise<User> => {
-        const newUser = { id: uuidv4(), name, age, email };
+    create: async (username: string, age: number, hobbies: string[]): Promise<User> => {
+        const newUser = { id: uuidv4(), username, age, hobbies };
         database.push(newUser);
         return newUser;
     },
-    update: async (id: string, name: string, age: number, email: string): Promise<User | undefined> => {
+    update: async (id: string, username: string, age: number, hobbies: string[]): Promise<User | undefined> => {
         const user = await db.getById(id);
         if (user) {
-            user.name = name;
+            user.username = username;
             user.age = age;
-            user.email = email;
+            user.hobbies = hobbies;
             return user;
         }
         return undefined;

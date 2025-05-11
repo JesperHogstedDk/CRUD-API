@@ -1,13 +1,15 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { db } from "../db/database.ts";
 import { validate } from "uuid";
+// import { db } from "../db/database.ts";
+const ext = process.env.NODE_ENV === "production" ? ".js" : ".ts";
+const { db } = await import(`../db/database${ext}`);
 
 const handleServerError = (res: ServerResponse, error: unknown) => {
-  console.error("Server error:", error);
-  if (!res.headersSent) {
-    res.writeHead(500);
-    res.end(JSON.stringify({ error: "Something went wrong on the server. Please try again later." }));
-  }
+    console.error("Server error:", error);
+    if (!res.headersSent) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: "Something went wrong on the server. Please try again later." }));
+    }
 };
 
 export const handleUserRequest = async (req: IncomingMessage, res: ServerResponse) => {
@@ -17,16 +19,19 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
         switch (req.method) {
             case "GET":
                 if (req.url === "/api/users") {
-                    // throw new Error("Simulated server error!");                    
                     try {
                         const users = await db.getAll();
                         res.writeHead(200);
                         return res.end(JSON.stringify(users));
-
                     } catch (error) {
+                        console.error("Error fetching users:", error);
                         handleServerError(res, error);
                     }
                 } else if (req.url?.startsWith("/api/users/")) {
+                    if (process.env.ENABLE_SERVER_ERROR_TEST === "true") {
+                        console.log("Running with ENABLE_SERVER_ERROR_TEST.");
+                        throw new Error("Simulated server error! TESTING ERROR HANDLING");
+                    };
                     const id = req.url.split("/")[3];
                     if (!validate(id)) {
                         res.writeHead(400);
@@ -42,7 +47,8 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                             return res.end(JSON.stringify({ error: "User not found" }));
                         }
                     } catch (error) {
-                        handleServerError(res, error);                        
+                        console.error("Error fetching user:", error);
+                        handleServerError(res, error);
                     }
                 }
                 break;
@@ -54,7 +60,6 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                     });
                     req.on("end", async () => {
                         console.log("Received body:", body);
-
                         const { username, age, hobbies } = JSON.parse(body);
                         if (!username || !age || !hobbies || hobbies.length === 0) {
                             res.writeHead(400);
@@ -65,6 +70,7 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                             res.writeHead(201);
                             return res.end(JSON.stringify(newUser));
                         } catch (error) {
+                            console.error("Error creating user:", error);
                             handleServerError(res, error);
                         }
                     });
@@ -98,6 +104,7 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                                 return res.end(JSON.stringify({ error: "User not found" }));
                             }
                         } catch (error) {
+                            console.error("Error updating user:", error);
                             handleServerError(res, error);
                         }
                     });
@@ -120,8 +127,8 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                             return res.end(JSON.stringify({ error: "User not found" }));
                         }
                     } catch (error) {
+                        console.error("Error deleting user:", error);
                         handleServerError(res, error);
-
                     }
                 }
                 break;

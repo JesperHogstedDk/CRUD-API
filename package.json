@@ -8,9 +8,11 @@
     "node": ">=22.14.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --env-file=.env --experimental-strip-types src/index.ts",
-    "dev": "node --env-file=.env --experimental-strip-types --watch src/index.ts"
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "build": "npx tsc --project tsconfig.build.json",
+    "start:prod": "npx cross-env NODE_ENV=production npm run build && node --env-file=.env dist/index.js",
+    "start:dev": "npx cross-env NODE_ENV=development node --env-file=.env --experimental-strip-types --watch src/index.ts",
+    "dev:servererror": "npx cross-env NODE_ENV=development ENABLE_SERVER_ERROR_TEST=true node --env-file=.env --experimental-strip-types --watch src/index.ts"
   },
   "author": "JesperHogstedDk",
   "license": "ISC",

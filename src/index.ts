@@ -1,5 +1,12 @@
 import { createServer } from 'node:http';
-import { handleUserRequest } from './routes/users.ts';
+
+const ext = process.env.NODE_ENV === "production" ? ".js" : ".ts";
+const { handleUserRequest }  = await import(`./routes/users${ext}`);
+// import { handleUserRequest } from './routes/users.ts';
+
+const mode = process.env.NODE_ENV || 'development';
+console.log(`Running in ${mode} mode`);
+console.log(`ENABLE_SERVER_ERROR_TEST: ${(process.env.ENABLE_SERVER_ERROR_TEST)}`);
 
 const PORT = process.env.PORT || 3000;
 

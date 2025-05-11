@@ -11,7 +11,6 @@ const database: User[] = [];
 
 export const db = {
     getAll: async (): Promise<User[]> => {
-        // throw new Error("Database connection failed! TESTING ERROR HANDLING");
         return database;
     },
     getById: async (id: string): Promise<User | undefined> => {
@@ -33,6 +32,10 @@ export const db = {
         return undefined;
     },
     delete: async (id: string): Promise<boolean> => {
+        if (process.env.ENABLE_SERVER_ERROR_TEST === "true") {
+            console.log("Running with ENABLE_SERVER_ERROR_TEST.");
+            throw new Error("Database connection failed! TESTING ERROR HANDLING");
+        }
         const user = await db.getById(id);
         if (!user) {
             return false;

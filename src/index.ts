@@ -1,8 +1,9 @@
 import { createServer } from 'node:http';
-
+// import { handleUserRequest } from './routes/users.ts'; 
+// Import must be dynamic in order to satisfy typescript build
 const ext = process.env.NODE_ENV === "production" ? ".js" : ".ts";
 const { handleUserRequest }  = await import(`./routes/users${ext}`);
-// import { handleUserRequest } from './routes/users.ts';
+
 
 const mode = process.env.NODE_ENV || 'development';
 console.log(`Running in ${mode} mode`);
@@ -10,8 +11,7 @@ console.log(`ENABLE_SERVER_ERROR_TEST: ${(process.env.ENABLE_SERVER_ERROR_TEST)}
 
 const PORT = process.env.PORT || 3000;
 
-const server = createServer(async (req, res) => {
-  console.log("Request received:", req.method, req.url);
+export const server = createServer(async (req, res) => {
   if (req.url?.startsWith("/api/users")) {
     return await handleUserRequest(req, res);
   } else if (req.url === "/") {

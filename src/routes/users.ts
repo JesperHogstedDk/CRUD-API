@@ -29,9 +29,10 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                     }
                 } else if (req.url?.startsWith("/api/users/")) {
                     if (process.env.ENABLE_SERVER_ERROR_TEST === "true") {
-                        console.log("Running with ENABLE_SERVER_ERROR_TEST.");
+                        console.log("Force error triggered!"); 
                         throw new Error("Simulated server error! TESTING ERROR HANDLING");
-                    };
+                    }
+
                     const id = req.url.split("/")[3];
                     if (!validate(id)) {
                         res.writeHead(400);
@@ -59,7 +60,7 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                         body += chunk.toString();
                     });
                     req.on("end", async () => {
-                        console.log("Received body:", body);
+                        // console.log("Received body:", body);
                         const { username, age, hobbies } = JSON.parse(body);
                         if (!username || !age || !hobbies || hobbies.length === 0) {
                             res.writeHead(400);
@@ -88,7 +89,7 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                         body += chunk.toString();
                     });
                     req.on("end", async () => {
-                        console.log("Received body:", body);
+                        // console.log("Received body:", body);
                         const { username, age, hobbies } = JSON.parse(body);
                         if (!username || !age || !hobbies || hobbies.length === 0) {
                             res.writeHead(400);

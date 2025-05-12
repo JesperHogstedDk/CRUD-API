@@ -13,7 +13,7 @@ if (cluster.isPrimary) {
   for (let i = 1; i <= numWorkers; i++) {
     const workerPort = LOAD_BALANCER_PORT + i;
     workerPorts.push(workerPort);
-    
+
     const worker = cluster.fork({ WORKER_PORT: workerPort });
 
     worker.on("online", () => {
@@ -53,5 +53,6 @@ if (cluster.isPrimary) {
   balancer.listen(LOAD_BALANCER_PORT, () => console.log(`Load balancer running at http://localhost:${LOAD_BALANCER_PORT}/api`));
 } else {
   console.log(`Worker process ${process.pid} starting index.ts on port ${process.env.WORKER_PORT}...`);
-  await import("./index.ts"); // Launch application instance
+  const ext = process.env.NODE_ENV === "production" ? ".js" : ".ts";
+  await import(`./index${ext}`);
 }

@@ -1,22 +1,30 @@
-import { createServer } from 'node:http';
-// import { handleUserRequest } from './routes/users.ts'; 
-// Import must be dynamic in order to satisfy typescript build
+import { createServer } from "node:http";
+
+// Import must be dynamic for TypeScript compatibility
 const ext = process.env.NODE_ENV === "production" ? ".js" : ".ts";
-const { handleUserRequest }  = await import(`./routes/users${ext}`);
+const { handleUserRequest } = await import(`./routes/users${ext}`);
 
-
-const mode = process.env.NODE_ENV || 'development';
+const mode = process.env.NODE_ENV || "development";
 console.log(`Running in ${mode} mode`);
-console.log(`ENABLE_SERVER_ERROR_TEST: ${(process.env.ENABLE_SERVER_ERROR_TEST)}`);
+// console.log(`ENABLE_SERVER_ERROR_TEST: ${process.env.ENABLE_SERVER_ERROR_TEST}`);
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.WORKER_PORT) || process.env.PORT || 3000;
+if (!PORT) {
+  console.error("ERROR: WORKER_PORT is not set! Exiting...");
+  process.exit(1);
+}
+
+// console.log(`Worker process ${process.pid} is starting at port ${PORT}`);
 
 export const server = createServer(async (req, res) => {
+  console.log(`Worker ${process.pid} at PORT ${PORT} received request: ${req.method} ${req.url}`);
+  
   if (req.url?.startsWith("/api/users")) {
     return await handleUserRequest(req, res);
-  } else if (req.url === "/") {
+  } 
+  if (req.url === "/") {
     res.writeHead(200);
-    res.end('This is a node CRUD API server with watch done with Typescript!');  
+    res.end(`This is a node CRUD API server with watch done with Typescript!`);
     return;
   }
 
@@ -26,5 +34,4 @@ export const server = createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
-  console.log('index.ts: esm-pure-experimental-strip-types');
 });

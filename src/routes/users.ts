@@ -16,6 +16,8 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
     try {
         res.setHeader("Content-Type", "application/json");
 
+        console.log(`Worker ${process.pid} handling request at local port ${req.socket.localPort}`);
+
         switch (req.method) {
             case "GET":
                 if (req.url === "/api/users") {
@@ -29,7 +31,7 @@ export const handleUserRequest = async (req: IncomingMessage, res: ServerRespons
                     }
                 } else if (req.url?.startsWith("/api/users/")) {
                     if (process.env.ENABLE_SERVER_ERROR_TEST === "true") {
-                        console.log("Force error triggered!"); 
+                        console.log("Force error triggered!");
                         throw new Error("Simulated server error! TESTING ERROR HANDLING");
                     }
 

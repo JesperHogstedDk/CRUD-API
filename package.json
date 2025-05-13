@@ -3,17 +3,40 @@
   "version": "1.0.0",
   "description": "Simple CRUD API using in-memory database",
   "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=22.14.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test:db": "tsx tests/database.test.ts",
+    "test:api": "tsx tests/userApi.test.ts",    
+    "test:index": "npx cross-env NODE_ENV=development ENABLE_SERVER_ERROR_TEST=true tsx tests/index.test.ts",
+    "test:all": "npm run test:db && npm run test:api &&  npm run test:index",
+    "build": "npx tsc --project tsconfig.build.json",
+    "start:prod": "npx cross-env NODE_ENV=production npm run build && node --env-file=.env dist/index.js",
+    "start:dev": "npx cross-env NODE_ENV=development node --env-file=.env --experimental-strip-types --watch src/index.ts",
+    "start:multi": "tsx src/cluster.ts"
   },
   "author": "JesperHogstedDk",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JesperHogstedDk/crud-api.git"
-  },  "bugs": {
+  },
+  "bugs": {
     "url": "https://github.com/JesperHogstedDk/crud-api/issues"
   },
-  "homepage": "https://github.com/JesperHogstedDk/crud-api#readme"
+  "homepage": "https://github.com/JesperHogstedDk/crud-api#readme",
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.0"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "cluster": "^0.7.7",
+    "os": "^0.1.2",
+    "tsx": "^4.19.4",
+    "uuid": "^11.1.0"
+  }
 }
